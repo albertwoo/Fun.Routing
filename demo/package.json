@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "webpack-dev-server",
         "build": "webpack -p",
-        "compileCss": "tailwind build demo/client/public/css/tailwind-source.css -o demo/client/public/css/tailwind-generated.css"
+        "compileCss": "tailwind build src/client/public/css/tailwind-source.css -o src/client/public/css/tailwind-generated.css"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
