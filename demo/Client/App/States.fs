@@ -34,7 +34,7 @@ let init() =
     defaultState)
   , Cmd.batch [
       Cmd.ofSub (fun dispatch -> Navigator.subscribe navigatorId (fun url -> UrlChanged url |> dispatch))
-      #if Debug
+      #if DEBUG
       Cmd.ofMsg (UrlChanged "/")
       #endif
     ]

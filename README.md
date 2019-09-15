@@ -28,4 +28,17 @@ let update msg (state: State) =
         | None -> { state with CurrentPage = NotFound url }, Cmd.none
     ...
 ```
-3. For server side rendering please go to `demo/Server`
+3. Use it in the ui. For client side there should be only one navigatorId and should be saved in the state. For the server sider there we should generate random id for concurrency safety.
+```fsharp
+let ssrLink navigatorId link label =
+  a [
+    OnClick (fun e -> e.preventDefault(); Navigator.newUrl navigatorId link)
+    Href link
+    Classes [
+      tailwind.``hover:text-green-700``
+    ]
+  ] [
+    str label
+  ] 
+```
+4. For server side rendering please go to `demo/Server`

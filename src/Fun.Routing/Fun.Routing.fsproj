@@ -2,6 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>This is a routing library for fable and inspired by Giraffe.
+It supports both client side and server sider rendering.</Description>
+    <PackageProjectUrl>https://github.com/albertwoo/Fun.Routing</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/albertwoo/Fun.Routing</RepositoryUrl>
+    <Version>1.0.0-beta1</Version>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="UrlParseUtils.fs" />
@@ -11,7 +16,6 @@
   <ItemGroup>
     <PackageReference Include="Fable.Browser.Dom" Version="1.1.0" />
     <PackageReference Include="Fable.Core" Version="3.0.0" />
-    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
