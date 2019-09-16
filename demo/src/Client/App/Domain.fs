@@ -17,5 +17,6 @@ type Msg =
 type Page =
   | Home of string
   | About
+  | Blog of int option
   | Loading
   | NotFound of string
