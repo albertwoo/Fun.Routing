@@ -62,6 +62,8 @@ let app state dispatch =
         ssrLink state.RouterId "/blog" "Blog"
         str " / "
         ssrLink state.RouterId "/blog/12" "Blog 12"
+        str " / "
+        ssrLink state.RouterId "/test404" "Test 404"
       ]
 
       div [

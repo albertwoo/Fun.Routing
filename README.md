@@ -30,12 +30,16 @@ It supports both client side and server sider rendering (SSR).
         choose
           [
             routeCi  ""          (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
-            routeCi  "/"         (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
             routeCi  "/home"     (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
             routeCi  "/about"    (fun state -> { state with CurrentPage = About }, Cmd.none)
-            routeCi  "/blog"     (fun state -> { state with CurrentPage = Blog None }, Cmd.none)
-            routeCif "/blog/%i"  (fun state id -> { state with CurrentPage = Blog (Some id) }, Cmd.none)
-            routeCi  "/notfound" (fun state -> { state with CurrentPage = NotFound "404" }, Cmd.none)
+
+            subRouteCi "/blog"
+              [
+                routeCi  ""      (fun state -> { state with CurrentPage = Blog None }, Cmd.none)
+                routeCif "/%i"   (fun state id -> { state with CurrentPage = Blog (Some id) }, Cmd.none)
+              ]
+
+            routeAny             (fun state url -> { state with CurrentPage = NotFound url }, Cmd.none)
           ]
 
     let update msg (state: State) =
