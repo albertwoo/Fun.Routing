@@ -29,7 +29,6 @@ let staticFileOptions =
 
 let configureServices (config: IConfiguration) (services : IServiceCollection) =
   services
-    .AddCors()
     .AddGiraffe()
     .AddResponseCompression(fun c ->
       c.Providers.Add<BrotliCompressionProvider>()
@@ -53,13 +52,7 @@ let configureServices (config: IConfiguration) (services : IServiceCollection) =
 
 
 let configureApp (app : IApplicationBuilder) =
-  let options =
-    RewriteOptions()
-      .AddRedirectToWwwPermanent()
-      .AddRedirectToHttpsPermanent()
-
-  app.UseRewriter(options)
-     .UseHsts()
+  app
      .UseResponseCompression()
      //.UseDefaultFiles() // disable it for SSR support
      .UseStaticFiles(staticFileOptions)
@@ -76,7 +69,7 @@ let main args =
         .AddJsonFile("appsettings.Development.json", optional = true, reloadOnChange = true)
         .AddJsonFile("appsettings.Production.json", optional = true, reloadOnChange = true)
         .AddCommandLine(args)
-        .Build();
+        .Build()
   WebHost
     .CreateDefaultBuilder()
     .CaptureStartupErrors(true)

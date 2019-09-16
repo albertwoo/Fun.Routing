@@ -42,7 +42,7 @@ let app state dispatch =
         | Page.Home x     -> h1 [] [ str x ]
         | Page.About      -> h1 [] [ str "About" ]
         | Page.Loading    -> solidIcon [ fontAwsome.``fa-truck-loading`` ]
-        | Page.NotFound x -> h1 [] [ str (sprintf "%s %s" x state.CurrentUrl) ]
+        | Page.NotFound x -> h1 [] [ str (sprintf "404 NOT FOUND %s" state.CurrentUrl) ]
 
     div [
       Classes [
