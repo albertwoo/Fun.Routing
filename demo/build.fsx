@@ -19,10 +19,10 @@ open Fake.IO.Globbing.Operators
 Target.initEnvironment ()
 
 
-let serverPath          = Path.getFullName "./src/Server"
-let clientPath          = Path.getFullName "./src/Client"
+let serverPath          = __SOURCE_DIRECTORY__ </> "src/Server"
+let clientPath          = __SOURCE_DIRECTORY__ </> "src/Client"
 
-let deployDir           = Path.getFullName "./deploy"
+let deployDir           = __SOURCE_DIRECTORY__ </> "deploy"
 let publishDir          = deployDir </> "publish"
 let clientDeployPath    = clientPath </> "deploy"
 
@@ -97,7 +97,7 @@ Target.create "Build" <| fun _ ->
 
 Target.create "RunClient" <| fun _ ->
     let client = async {
-        yarn (sprintf "tailwind build '%s/public/css/tailwind-source.css' -o '%s/public/css/tailwind-generated.css'" clientPath clientPath) clientPath
+        yarn "tailwind build public/css/tailwind-source.css -o public/css/tailwind-generated.css" clientPath
         yarn "webpack-dev-server" clientPath
     }
     let browser = async {

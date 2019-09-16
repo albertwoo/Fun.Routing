@@ -17,7 +17,7 @@ type NavigationState =
       CurrentUrl = None
       OnChangeRef =
         Handler(fun _ ->
-          failwith "`onChangeRef` has not been initialized.\nPlease make sure you used Elmish.Navigation.Program.Internal.subscribe")
+          failwith "`OnChangeRef` has not been initialized.")
     }
 
 
