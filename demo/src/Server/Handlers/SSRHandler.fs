@@ -32,7 +32,7 @@ let renderMainApp: HttpHandler =
     let model =
       match stateResult with
       | Some state ->
-          Fun.Routing.Navigator.removeNavigators state.NavigatorId
+          Fun.Routing.Navigator.removeNavigators state.RouterId
           state
       | None ->
           Client.App.States.defaultState

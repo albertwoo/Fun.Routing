@@ -3,8 +3,8 @@ module Client.App.Views
 open System
 open Fable.React
 open Fable.React.Props
-open Fun.Routing
 open Zanaptak.TypedCssClasses
+open Fun.Routing
 
 
 type tailwind = CssClasses<"./public/css/tailwind-generated.css", Naming.Verbatim>
@@ -42,7 +42,7 @@ let app state dispatch =
         | Page.Home x     -> h1 [] [ str x ]
         | Page.About      -> h1 [] [ str "About" ]
         | Page.Loading    -> solidIcon [ fontAwsome.``fa-truck-loading`` ]
-        | Page.NotFound x -> h1 [] [ str (sprintf "404 NOT FOUND %s" state.CurrentUrl) ]
+        | Page.NotFound x -> h1 [] [ str (sprintf "404 NOT FOUND: %s" x) ]
 
     div [
       Classes [
@@ -54,9 +54,9 @@ let app state dispatch =
           tailwind.``text-center``
         ]
       ] [
-        ssrLink state.NavigatorId "/" "Home"
+        ssrLink state.RouterId "/" "Home"
         str " / "
-        ssrLink state.NavigatorId "/about" "About"
+        ssrLink state.RouterId "/about" "About"
       ]
 
       div [

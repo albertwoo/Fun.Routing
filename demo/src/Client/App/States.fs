@@ -9,8 +9,7 @@ open Client.Common
 
 
 let defaultState =
-  { CurrentUrl = ""
-    NavigatorId = sprintf "Navigator-%d" (Random().Next(0, 10000))
+  { RouterId = Random().Next(0, 10000).ToString()
     CurrentPage = Page.Loading
     CurrentDateTime = DateTime.Now }
 
@@ -28,14 +27,14 @@ let init() =
           | Error e ->
               Browser.Dom.console.error e
               s
-      navigatorId <- initState.NavigatorId
+      navigatorId <- initState.RouterId
       initState)
     id
     defaultState)
   , Cmd.batch [
       Cmd.ofSub (fun dispatch -> Navigator.subscribe navigatorId (fun url -> UrlChanged url |> dispatch))
 
-      #if DEBUG
+      #if FABLE_COMPILER
       Cmd.ofMsg (UrlChanged "/")
       #endif
     ]
@@ -55,7 +54,6 @@ let routes: Router<State, Cmd<Msg>> =
 let update msg (state: State) =
     match msg with
     | UrlChanged url ->
-        let state = { state with CurrentUrl = url }
         match routes state url with
         | Some x -> x
         | None -> { state with CurrentPage = NotFound url }, Cmd.none

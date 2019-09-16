@@ -5,8 +5,7 @@ open System
 
 
 type State =
-  { CurrentUrl: string
-    NavigatorId: string
+  { RouterId: string
     CurrentPage: Page
     CurrentDateTime: DateTime }
 
