@@ -38,10 +38,6 @@ let platformTool tool winTool =
             "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
         failwith errorMsg
 
-let nodeTool = platformTool "node" "node.exe"
-//let yarnTool = platformTool "yarn" "yarn.cmd"
-let npmTool  = platformTool "npm" "npm.cmd"
-
 
 let runTool cmd args workingDir =
     let arguments = args |> String.split ' ' |> Arguments.OfArgs
@@ -53,7 +49,10 @@ let runTool cmd args workingDir =
     |> ignore
 
 
-let runDotNet cmd workingDir =
+let node = runTool (platformTool "node" "node.exe")
+let yarn = runTool (platformTool "yarn" "yarn.cmd")
+
+let dotnet cmd workingDir =
     let result =
         DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
     if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
@@ -85,21 +84,21 @@ Target.create "Clean" <| fun _ ->
 
 Target.create "InstallPackages" <| fun _ ->
     printfn "Node version:"
-    runTool nodeTool "--version" clientPath
+    node "--version" clientPath
     printfn "Npm version:"
-    runTool npmTool "--version" clientPath
-    runTool npmTool "install" clientPath
+    yarn "--version" clientPath
+    yarn "install" clientPath
 
 
 Target.create "Build" <| fun _ ->
-    runDotNet "build" serverPath
-    runTool npmTool "run build" clientPath
+    dotnet "build" serverPath
+    yarn "webpack -p" clientPath
 
 
 Target.create "RunClient" <| fun _ ->
     let client = async {
-        runTool npmTool "run compileCss" clientPath
-        runTool npmTool "run dev" clientPath
+        yarn (sprintf "tailwind build '%s/public/css/tailwind-source.css' -o '%s/public/css/tailwind-generated.css'" clientPath clientPath) clientPath
+        yarn "webpack-dev-server" clientPath
     }
     let browser = async {
         do! Async.Sleep 10000
@@ -119,14 +118,14 @@ Target.create "RunClient" <| fun _ ->
 
 Target.create "RunServer" <| fun _ ->
     async {
-        runDotNet "watch run" serverPath
+        dotnet "watch run" serverPath
     }
     |> Async.RunSynchronously
 
 
 Target.create "Bundle" <| fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" publishDir
-    runDotNet publishArgs serverPath
+    dotnet publishArgs serverPath
     clearDeployFolder publishDir
 
     let clientDir = publishDir </> "wwwroot"

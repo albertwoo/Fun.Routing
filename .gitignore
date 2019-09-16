@@ -16,3 +16,4 @@ release.sh
 deploy
 *.user
 src/Server/SiteDb.db
+paket.exe

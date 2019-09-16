@@ -1,10 +1,5 @@
 {
     "private": true,
-    "scripts": {
-        "dev": "webpack-dev-server",
-        "build": "webpack -p",
-        "compileCss": "tailwind build src/client/public/css/tailwind-source.css -o src/client/public/css/tailwind-generated.css"
-    },
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "@babel/preset-env": "^7.5.5",
