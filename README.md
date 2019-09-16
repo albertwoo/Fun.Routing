@@ -42,3 +42,8 @@ let ssrLink navigatorId link label =
   ] 
 ```
 4. For server side rendering please go to `demo/Server`
+
+
+# How to run demo
+1. Make sure you have `yarn`, `paket`, `fake-cli` installed globally
+2. cd to `./demo` and run `fake build -t RunClient`
