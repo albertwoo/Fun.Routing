@@ -18,5 +18,6 @@ type Page =
   | Home of string
   | About
   | Blog of int option
+  | Doc of query: string
   | Loading
   | NotFound of string

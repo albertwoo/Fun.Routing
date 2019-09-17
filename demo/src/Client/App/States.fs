@@ -49,6 +49,8 @@ let routes: Router<State, Cmd<Msg>> =
             routeCi  ""      (fun state -> { state with CurrentPage = Blog None }, Cmd.none)
             routeCif "/%i"   (fun state id -> { state with CurrentPage = Blog (Some id) }, Cmd.none)
           ]
+        routeCifWithQuery "/doc/%d"
+                             (fun state id q -> { state with CurrentPage = Doc (q |> Option.defaultValue "defa") }, Cmd.none)
         routeAny             (fun state url -> { state with CurrentPage = NotFound url }, Cmd.none)
       ]
 

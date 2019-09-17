@@ -42,6 +42,7 @@ let app state dispatch =
         | Page.Home x     -> h1 [] [ str x ]
         | Page.About      -> h1 [] [ str "About" ]
         | Page.Blog id    -> h1 [] [ str (match id with Some id -> sprintf "Selected blog: %d" id | None -> "Blogs")  ]
+        | Page.Doc q      -> h1 [] [ str (sprintf "Doc %s " q) ]
         | Page.Loading    -> solidIcon [ fontAwsome.``fa-truck-loading`` ]
         | Page.NotFound x -> h1 [] [ str (sprintf "404 NOT FOUND: %s" x) ]
 
@@ -63,7 +64,11 @@ let app state dispatch =
         str " / "
         ssrLink state.RouterId "/blog/12" "Blog 12"
         str " / "
-        ssrLink state.RouterId "/blog/13?title=My Blog" "Blog with query"
+        ssrLink state.RouterId "/blog/13?title=中文？" "Blog with query"
+        str " / "
+        ssrLink state.RouterId "/doc/4" "Doc with query"
+        str " / "
+        ssrLink state.RouterId "/doc/4?title=Test title" "Doc with query2"
         str " / "
         ssrLink state.RouterId "/test404" "Test 404"
       ]
