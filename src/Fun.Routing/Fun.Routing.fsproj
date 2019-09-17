@@ -6,7 +6,7 @@
 It supports both client side and server sider rendering.</Description>
     <PackageProjectUrl>https://github.com/albertwoo/Fun.Routing</PackageProjectUrl>
     <RepositoryUrl>https://github.com/albertwoo/Fun.Routing</RepositoryUrl>
-    <Version>1.0.0-beta2</Version>
+    <Version>1.0.0-beta3</Version>
     <Authors>slaveoftime</Authors>
     <Company>https://www.slaveoftime.fun</Company>
     <PackageReleaseNotes>Add new pre defined routers</PackageReleaseNotes>
