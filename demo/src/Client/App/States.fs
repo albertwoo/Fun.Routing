@@ -15,24 +15,22 @@ let defaultState =
 
 
 let init() =
-  let mutable routerId = ""
-  (clientServerExec
-    (fun s ->
-      let initBaseStr = !!Browser.Dom.window?__INIT_STATE__: string
-      let initState =
+  let state =
+    clientServerExec
+      (fun s ->
+        let initBaseStr = !!Browser.Dom.window?__INIT_STATE__: string
         if String.IsNullOrEmpty initBaseStr then s
         else
           match fromJson<State> (fromBase64 initBaseStr) with
           | Ok x -> x
           | Error e ->
               Browser.Dom.console.error e
-              s
-      routerId <- initState.RouterId
-      initState)
-    id
-    defaultState)
+              s)
+      id
+      defaultState
+  state
   , Cmd.batch [
-      Cmd.ofSub (fun dispatch -> Navigator.subscribe routerId (fun url -> UrlChanged url |> dispatch))
+      Cmd.ofSub (fun dispatch -> Navigator.subscribe state.RouterId (fun url -> UrlChanged url |> dispatch))
 
       #if FABLE_COMPILER
       Cmd.ofMsg (UrlChanged "/")

@@ -5,6 +5,12 @@ type RouteUrl = string
 
 type Router<'State, 'Cmd> = 'State -> RouteUrl -> ('State * 'Cmd) Option
 
+
+let private getUrlMainPath (url: string) =
+    let index = url.IndexOf '?'
+    if index > -1 then url.Substring(0, index)
+    else url
+
 /// Find the first matched router in the list
 let choose<'State, 'Cmd> (routes: Router<'State, 'Cmd> list): Router<'State, 'Cmd> =
     fun state url ->
@@ -24,7 +30,7 @@ let subRouteCi (pattern: string) routes: Router<_, _> =
 /// Exact match the url and ignore case sensitive
 let routeCi (pattern: string) update: Router<_, _> =
     fun state url ->
-        if url.ToLower() = pattern.ToLower() then
+        if (getUrlMainPath url).ToLower() = pattern.ToLower() then
             Some (update state)
         elif (url = "" || url = "/") && pattern = "" then
             Some (update state)
@@ -34,7 +40,7 @@ let routeCi (pattern: string) update: Router<_, _> =
 /// Match the url, extract parameters and ignore case sensitive
 let routeCif (path: PrintfFormat<_,_,_,_, 'T>) update: Router<_, _> =
     fun state url ->
-        UrlParseUtils.tryMatchInput path url true
+        UrlParseUtils.tryMatchInput path (getUrlMainPath url) true
         |> Option.map (update state)
 
         
