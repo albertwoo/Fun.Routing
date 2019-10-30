@@ -22,6 +22,8 @@ type NavigationState =
 module Navigator =
     let mutable private navigators: Map<string, NavigationState> = Map.empty
 
+    let private setNavigators value = navigators <- value
+
     let private getNavigator id =
       navigators
       |> Map.tryFind id
@@ -29,7 +31,7 @@ module Navigator =
         | Some x -> x
         | None ->
             let navigator = NavigationState.defaultValue
-            navigators <- navigators |> Map.add id navigator
+            navigators |> Map.add id navigator |> setNavigators
             navigator          
 
     let modifyUrl id (newUrl:string) =
@@ -80,4 +82,4 @@ module Navigator =
         navigator.Event.Publish.RemoveHandler navigator.OnChangeRef
 
 
-    let removeNavigators id = navigators <- navigators |> Map.filter (fun k _ -> k = id)
+    let removeNavigators id = navigators |> Map.filter (fun k _ -> k <> id) |> setNavigators
