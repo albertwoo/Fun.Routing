@@ -31,12 +31,12 @@ let private formatStringMap =
     dict [
     // Char    Regex                    Parser
     // -------------------------------------------------------------
-        'b', ("(?i:(true|false)){1}",   boolParser           >> box)  // bool
+        'b', ("(true|false){1}",   boolParser           >> box)  // bool
         'c', ("(.{1})",                 char                 >> box)  // char
         's', ("(.+)",                   decodeSlashes        >> box)  // string
         'i', ("(-?\d+)",                int32                >> box)  // int
         'd', ("(-?\d+)",                int64                >> box)  // int64
-        'f', ("(-?\d+\.{1}\d+)",        float                >> box)  // float
+        'f', ("(-?\d+\.{0,1}\d+)",        float                >> box)  // float
         'O', (guidPattern,              Guid.Parse           >> box)  // Guid
     ]
 
@@ -90,18 +90,26 @@ let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreC
                     value)
                 |> Seq.toArray
 
-            let result =
-                match values.Length with
-                | 1 -> values.[0]
-                | _ ->
-                    let tupleType =
-                      values
-                      |> Array.map (fun _ -> typeof<obj>)
-                      |> FSharpType.MakeTupleType
-                    FSharpValue.MakeTuple(values, tupleType)
-
-            result :?> 'T |> Some
+            match values.Length with
+              | 1 -> values.[0]
+              | _ ->
+                  let tupleType =
+                    values
+                    |> Array.map (fun v ->
+                        #if FABLE_COMPILER
+                        typeof<obj>
+                        #else
+                        v.GetType()
+                        #endif
+                        )
+                    |> FSharpType.MakeTupleType
+                  FSharpValue.MakeTuple(values, tupleType)
+            |> unbox<'T> |> Some
     with
     | ex ->
+        #if FABLE_COMPILER
+        Browser.Dom.console.warn (sprintf "Url matched failed: %A" ex)
+        #else
         System.Diagnostics.Debug.WriteLine(sprintf "Route parse error: %A" ex)
+        #endif
         None
