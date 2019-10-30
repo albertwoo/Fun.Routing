@@ -10,6 +10,7 @@ open Elmish.HMR
 
 
 Program.mkProgram App.States.init App.States.update App.Views.app
+|> Program.withSubscription App.States.routerSub
 #if DEBUG
 |> Program.withConsoleTrace
 #endif

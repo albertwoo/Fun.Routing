@@ -30,7 +30,6 @@ let init() =
       defaultState
   state
   , Cmd.batch [
-      Cmd.ofSub (fun dispatch -> Navigator.subscribe state.RouterId (fun url -> UrlChanged url |> dispatch))
 
       #if FABLE_COMPILER
       Cmd.ofMsg (UrlChanged "/")
@@ -38,20 +37,32 @@ let init() =
     ]
 
 
+let routerSub state =
+  Cmd.ofSub (fun dispatch ->
+    Fun.Routing.Navigator.subscribe state.RouterId (UrlChanged >> dispatch)
+  )
+
+
 let routes: Router<State, Cmd<Msg>> =
     choose
       [
-        routeCi  ""          (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
-        routeCi  "/home"     (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
-        routeCi  "/about"    (fun state -> { state with CurrentPage = About }, Cmd.none)
+        routeCi  ""                   (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
+        routeCi  "/home"              (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
+        routeCi  "/about"             (fun state -> { state with CurrentPage = About }, Cmd.none)
+        routeCi  "/#/about"           (fun state -> { state with CurrentPage = About }, Cmd.none)
+
         subRouteCi "/blog"
           [
-            routeCi  ""      (fun state -> { state with CurrentPage = Blog None }, Cmd.none)
-            routeCif "/%i"   (fun state id -> { state with CurrentPage = Blog (Some id) }, Cmd.none)
+            routeCi  ""               (fun state -> { state with CurrentPage = Blog None }, Cmd.none)
+            routeCif "/%i"            (fun state id -> { state with CurrentPage = Blog (Some id) }, Cmd.none)
           ]
-        routeCifWithQuery "/doc/%d"
-                             (fun state id q -> { state with CurrentPage = Doc (q |> Option.defaultValue "defa") }, Cmd.none)
-        routeAny             (fun state url -> { state with CurrentPage = NotFound url }, Cmd.none)
+
+        routeCifWithQuery "/doc/%d"   (fun state (id: int64) q -> { state with CurrentPage = Doc (q |> Option.defaultValue "defa") }, Cmd.none)
+        routeCif "/tuple/t1/%i/t2/%f" (fun state (t1, t2) -> { state with CurrentPage = FormatTest (sprintf "%i - %f" t1 t2) }, Cmd.none)
+        routeCif "/tuple/t1/%i/t2/%s" (fun state (t1, t2) -> { state with CurrentPage = FormatTest (sprintf "%i - %s" t1 t2) }, Cmd.none)
+        routeCif "/format/%b/%c/%s/%i/%d/%f/%O" (fun state (b, c, s, i, (d: int64), f, (o: Guid)) -> { state with CurrentPage = FormatTest (sprintf "%b/%c/%s/%i/%d/%f/%O" b c s i d f o) }, Cmd.none)
+
+        routeAny                      (fun state url -> { state with CurrentPage = NotFound url }, Cmd.none)
       ]
 
 

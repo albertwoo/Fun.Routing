@@ -10,7 +10,7 @@ open Elmish
 
 let renderMainApp: HttpHandler =
   fun nxt ctx ->
-    let mutable stateResult: Client.App.Domain.State option = None
+    let mutable stateResult: Client.App.State option = None
     let mutable viewResult: Fable.React.ReactElement option = None
 
     Program.mkProgram
@@ -19,7 +19,7 @@ let renderMainApp: HttpHandler =
           state
           , Cmd.batch [
               cmd
-              Cmd.ofMsg (Client.App.Domain.UrlChanged ctx.Request.Path.Value)
+              Cmd.ofMsg (ctx.Request.Path.Value + ctx.Request.QueryString.Value |> Client.App.UrlChanged)
             ])
       Client.App.States.update
       (fun model dispatch ->
@@ -27,6 +27,7 @@ let renderMainApp: HttpHandler =
           stateResult <- Some model
           viewResult <- Some v
           v)
+    |> Program.withSubscription Client.App.States.routerSub
     |> Program.run
 
     let model =

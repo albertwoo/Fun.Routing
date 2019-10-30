@@ -1,5 +1,4 @@
-[<AutoOpen>]
-module rec Client.App.Domain
+namespace rec Client.App
 
 open System
 
@@ -19,5 +18,6 @@ type Page =
   | About
   | Blog of int option
   | Doc of query: string
+  | FormatTest of string
   | Loading
   | NotFound of string

@@ -39,12 +39,13 @@ let solidIcon classes =
 let app state dispatch =
     let currentPage =
         match state.CurrentPage with
-        | Page.Home x     -> h1 [] [ str x ]
-        | Page.About      -> h1 [] [ str "About" ]
-        | Page.Blog id    -> h1 [] [ str (match id with Some id -> sprintf "Selected blog: %d" id | None -> "Blogs")  ]
-        | Page.Doc q      -> h1 [] [ str (sprintf "Doc %s " q) ]
-        | Page.Loading    -> solidIcon [ fontAwsome.``fa-truck-loading`` ]
-        | Page.NotFound x -> h1 [] [ str (sprintf "404 NOT FOUND: %s" x) ]
+        | Page.Home x       -> h1 [] [ str x ]
+        | Page.About        -> h1 [] [ str "About" ]
+        | Page.Blog id      -> h1 [] [ str (match id with Some id -> sprintf "Selected blog: %d" id | None -> "Blogs")  ]
+        | Page.Doc q        -> h1 [] [ str (sprintf "Doc %s " q) ]
+        | Page.FormatTest q -> h1 [] [ str (sprintf "Format %s " q) ]
+        | Page.Loading      -> solidIcon [ fontAwsome.``fa-truck-loading`` ]
+        | Page.NotFound x   -> h1 [] [ str (sprintf "404 NOT FOUND: %s" x) ]
 
     div [
       Classes [
@@ -57,19 +58,29 @@ let app state dispatch =
         ]
       ] [
         ssrLink state.RouterId "/" "Home"
-        str " / "
+        hr[]
         ssrLink state.RouterId "/about" "About"
-        str " / "
+        hr[]
+        ssrLink state.RouterId "/#/about" "# About"
+        hr[]
         ssrLink state.RouterId "/blog" "Blog"
-        str " / "
+        hr[]
         ssrLink state.RouterId "/blog/12" "Blog 12"
-        str " / "
+        hr[]
         ssrLink state.RouterId "/blog/13?title=中文？" "Blog with query"
-        str " / "
+        hr[]
         ssrLink state.RouterId "/doc/4" "Doc with query"
-        str " / "
+        hr[]
         ssrLink state.RouterId "/doc/4?title=Test title" "Doc with query2"
-        str " / "
+        hr[]
+        ssrLink state.RouterId "/tuple/t1/3/t2/4" "Should be: 3 4"
+        hr[]
+        ssrLink state.RouterId "/tuple/t1/5/t2/6.4" "Should be: 5 6.4"
+        hr[]
+        ssrLink state.RouterId "/tuple/t1/7/t2/test" "Should be: 5 test"
+        hr[]
+        ssrLink state.RouterId "/format/true/w/test/1/2/3.4/e8ff4edc-31e3-4683-b801-ad36eeee404e" "Format test. Should be: true/w/test/1/2/3.4/e8ff4edc-31e3-4683-b801-ad36eeee404e"
+        hr[]
         ssrLink state.RouterId "/test404" "Test 404"
       ]
 
