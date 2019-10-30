@@ -20,9 +20,9 @@ type NavigationState =
 
 
 module Navigator =
-    let mutable navigators: Map<string, NavigationState> = Map.empty
+    let mutable private navigators: Map<string, NavigationState> = Map.empty
 
-    let getNavigator id =
+    let private getNavigator id =
       navigators
       |> Map.tryFind id
       |> function

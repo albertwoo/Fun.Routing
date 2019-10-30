@@ -94,15 +94,13 @@ let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreC
                 match values.Length with
                 | 1 -> values.[0]
                 | _ ->
-                    let types =
-                        values
-                        |> Array.map (fun v -> v.GetType())
-                    let tupleType = FSharpType.MakeTupleType types
+                    let tupleType =
+                      values
+                      |> Array.map (fun _ -> typeof<obj>)
+                      |> FSharpType.MakeTupleType
                     FSharpValue.MakeTuple(values, tupleType)
 
-            result
-            :?> 'T
-            |> Some
+            result :?> 'T |> Some
     with
     | ex ->
         System.Diagnostics.Debug.WriteLine(sprintf "Route parse error: %A" ex)
