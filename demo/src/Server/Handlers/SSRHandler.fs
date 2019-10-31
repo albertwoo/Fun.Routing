@@ -48,7 +48,7 @@ let renderMainApp: HttpHandler =
 
     let contentHtml = Fable.ReactServer.renderToString view
 
-    let env = ctx.GetService<IHostingEnvironment>()
+    let env = ctx.GetService<IWebHostEnvironment>()
 
     let indexHtml =
       Path.Combine [| env.WebRootPath; "index.html" |]

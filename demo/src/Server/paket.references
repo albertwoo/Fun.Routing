@@ -1,11 +1,5 @@
 group Server
     FSharp.Core
     Giraffe
-    Microsoft.AspNetCore
-    Microsoft.AspNetCore.Mvc
-    Microsoft.AspNetCore.HttpsPolicy
-    Microsoft.AspNetCore.StaticFiles
-    Microsoft.AspNetCore.Rewrite
-    Microsoft.AspNetCore.ResponseCompression
     Microsoft.FSharpLu
     Microsoft.FSharpLu.Json
