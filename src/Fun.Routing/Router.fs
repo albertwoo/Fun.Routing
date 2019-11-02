@@ -3,7 +3,7 @@ module Fun.Routing.Router
 
 type RouteUrl = string
 
-type Router<'State, 'Cmd> = 'State -> RouteUrl -> ('State * 'Cmd) Option
+type Router<'State, 'NewState> = 'State -> RouteUrl -> 'NewState Option
 
 
 let private getUrlMainPath (url: string) =

@@ -43,7 +43,7 @@ let routerSub state =
   )
 
 
-let routes: Router<State, Cmd<Msg>> =
+let routeUpdate: Router<State, State * Cmd<Msg>> =
     choose
       [
         routeCi  ""                   (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
@@ -69,7 +69,7 @@ let routes: Router<State, Cmd<Msg>> =
 let update msg (state: State) =
     match msg with
     | UrlChanged url ->
-        match routes state url with
+        match routeUpdate state url with
         | Some x -> x
         | None -> { state with CurrentPage = NotFound url }, Cmd.none
 
