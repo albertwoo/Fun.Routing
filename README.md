@@ -15,18 +15,14 @@ It supports both client side and server sider rendering (SSR).
     ```
 3. Subscribe router change when app begin
     ```fsharp
-    Cmd.batch [
+    Program.withSubscription (fun state ->
       Cmd.ofSub (fun dispatch ->
-        Navigator.subscribe routerId (fun url -> UrlChanged url |> dispatch))
-
-      #if FABLE_COMPILER
-      Cmd.ofMsg (UrlChanged "/")
-      #endif
-    ]
+        Fun.Routing.Navigator.subscribe state.RouterId (App.UrlChanged >> dispatch)
+      ))
     ```
 4. Define routes and use it with `update` function
     ```fsharp
-    let routes: Router<State, Cmd<Msg>> =
+    let routeUpdate: Router<State, Cmd<Msg>> =
         choose
           [
             routeCi  ""          (fun state -> { state with CurrentPage = Home "Home" }, Cmd.none)
@@ -45,7 +41,7 @@ It supports both client side and server sider rendering (SSR).
     let update msg (state: State) =
         match msg with
         | UrlChanged url ->
-            match routes state url with
+            match routeUpdate state url with
             | Some x -> x
             | None -> { state with CurrentPage = NotFound url }, Cmd.none
     ```
