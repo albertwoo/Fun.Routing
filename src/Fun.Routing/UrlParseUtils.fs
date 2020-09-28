@@ -22,23 +22,24 @@ let private formatStringMap =
         "([0-9A-Fa-f]{8}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{12}|[0-9A-Fa-f]{32}|[-_0-9A-Za-z]{22})"
 
     let boolParser = function
-      | "true"
-      | "1" -> true
-      | "false"
-      | "0" -> false
-      | x -> failwithf "Not supported bool value %s" x
+        | "true"
+        | "1" -> true
+        | "false"
+        | "0" -> false
+        | x -> failwithf "Not supported bool value %s" x
 
     dict [
     // Char    Regex                    Parser
     // -------------------------------------------------------------
-        'b', ("(true|false){1}",   boolParser           >> box)  // bool
+        'b', ("(true|false){1}",        boolParser           >> box)  // bool
         'c', ("(.{1})",                 char                 >> box)  // char
         's', ("(.+)",                   decodeSlashes        >> box)  // string
         'i', ("(-?\d+)",                int32                >> box)  // int
         'd', ("(-?\d+)",                int64                >> box)  // int64
-        'f', ("(-?\d+\.{0,1}\d+)",        float                >> box)  // float
+        'f', ("(-?\d+\.{0,1}\d+)",      float                >> box)  // float
         'O', (guidPattern,              Guid.Parse           >> box)  // Guid
     ]
+
 
 let private convertToRegexPatternAndFormatChars (formatString : string) =
     let rec convert (chars : char list) =
@@ -59,6 +60,7 @@ let private convertToRegexPatternAndFormatChars (formatString : string) =
     |> Array.toList
     |> convert
     |> (fun (pattern, formatChars) -> sprintf "^%s$" pattern, formatChars)
+
 
 let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreCase : bool) =
     try

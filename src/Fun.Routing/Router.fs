@@ -11,6 +11,7 @@ let private getUrlMainPath (url: string) =
     if index > -1 then url.Substring(0, index)
     else url
 
+
 /// Find the first matched router in the list
 let choose<'State, 'Cmd> (routes: Router<'State, 'Cmd> list): Router<'State, 'Cmd> =
     fun state url ->
@@ -62,3 +63,10 @@ let routeCifWithQuery (path: PrintfFormat<_,_,_,_, 'T>) update: Router<_, _> =
 let routeAny update: Router<_, _> =
     fun state url ->
         Some (update state url)
+
+
+let ( >=> ) route1 route2: Router<_, _> =
+    fun state url ->
+        match route1 state url with
+        | Some newState -> route2 newState url
+        | None -> None

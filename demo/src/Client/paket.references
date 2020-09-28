@@ -8,3 +8,4 @@ group Client
     Thoth.Json
     Thoth.Json.Net
     Zanaptak.TypedCssClasses
+    Fun.LightForm.Fable

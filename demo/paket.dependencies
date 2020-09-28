@@ -20,6 +20,7 @@ group Client
   nuget Thoth.Json
   nuget Thoth.Json.Net
   nuget Zanaptak.TypedCssClasses
+  nuget Fun.LightForm.Fable
   
 
 group Build
