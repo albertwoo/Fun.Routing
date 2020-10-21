@@ -6,7 +6,8 @@ open System
 type State =
   { RouterId: string
     CurrentPage: Page
-    CurrentDateTime: DateTime }
+    CurrentDateTime: DateTime
+    Error: string option }
 
 type Msg =
   | UrlChanged of string

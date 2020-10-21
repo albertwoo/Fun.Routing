@@ -9,38 +9,38 @@ open Client.Common
 
 
 let defaultState =
-  { RouterId = Random().Next(0, 10000).ToString()
-    CurrentPage = Page.Loading
-    CurrentDateTime = DateTime.Now }
+    { RouterId = Random().Next(0, 10000).ToString()
+      CurrentPage = Page.Loading
+      CurrentDateTime = DateTime.Now
+      Error = None }
 
 
 let init() =
-  let state =
-    clientServerExec
-      (fun s ->
-        let initBaseStr = !!Browser.Dom.window?__INIT_STATE__: string
-        if String.IsNullOrEmpty initBaseStr then s
-        else
-          match fromJson<State> (fromBase64 initBaseStr) with
-          | Ok x -> x
-          | Error e ->
-              Browser.Dom.console.error e
-              s)
-      id
-      defaultState
-  state
+    let state =
+        clientServerExec
+            (fun s ->
+                let initBaseStr = !!Browser.Dom.window?__INIT_STATE__: string
+                if String.IsNullOrEmpty initBaseStr then s
+                else
+                    match fromJson<State> (fromBase64 initBaseStr) with
+                    | Ok x -> x
+                    | Error e ->
+                        Browser.Dom.console.error e
+                        s)
+                id
+            defaultState
+    state
   , Cmd.batch [
-
-      #if FABLE_COMPILER
-      Cmd.ofMsg (UrlChanged "/")
-      #endif
+        #if FABLE_COMPILER
+        Cmd.ofMsg (UrlChanged "/")
+        #endif
     ]
 
 
 let routerSub state =
-  Cmd.ofSub (fun dispatch ->
-    Fun.Routing.Navigator.subscribe state.RouterId (UrlChanged >> dispatch)
-  )
+    Cmd.ofSub (fun dispatch ->
+        Fun.Routing.Navigator.subscribe state.RouterId (UrlChanged >> dispatch)
+    )
 
 
 type MyRouter = Router<State * Cmd<Msg>, State * Cmd<Msg>>
@@ -67,6 +67,9 @@ let routeUpdate: MyRouter =
         ]
 
         routeCifWithQuery "/doc/%d"   (fun (state, _) (id: int64) q -> { state with CurrentPage = Doc (q |> Option.defaultValue "defa") }, Cmd.none)
+        
+        routeCif "/exception/%i"   (fun (state, _) (_: int64) -> state, Cmd.none)
+
         routeCif "/tuple/t1/%i/t2/%f" (fun (state, _) (t1, t2) -> { state with CurrentPage = FormatTest (sprintf "%i - %f" t1 t2) }, Cmd.none)
         routeCif "/tuple/t1/%i/t2/%s" (fun (state, _) (t1, t2) -> { state with CurrentPage = FormatTest (sprintf "%i - %s" t1 t2) }, Cmd.none)
         routeCif "/format/%b/%c/%s/%i/%d/%f/%O" (fun (state, _) (b, c, s, i, (d: int64), f, (o: Guid)) -> { state with CurrentPage = FormatTest (sprintf "%b/%c/%s/%i/%d/%f/%O" b c s i d f o) }, Cmd.none)

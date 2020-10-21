@@ -59,6 +59,8 @@ let app state dispatch =
                     hr[]
                     ssrLink state.RouterId "/doc/4" "Doc with query"
                     hr[]
+                    ssrLink state.RouterId "/exception/4" "Should throw exception because parameter type miss match"
+                    hr[]
                     ssrLink state.RouterId "/doc/4?title=Test title" "Doc with query2"
                     hr[]
                     ssrLink state.RouterId "/tuple/t1/3/t2/4" "Should be: 3 4"
@@ -75,7 +77,18 @@ let app state dispatch =
 
             div </> [
                 Classes [ tailwind.``text-center``; tailwind.``text-4xl`` ]
-                Children [ currentPage ]
+                Children [ 
+                    currentPage
+
+                    match state.Error with
+                    | Some e ->
+                        div </> [
+                            Classes [ tailwind.``p-04``; tailwind.``mt-10`` ]
+                            Text e
+                        ]
+                    | None ->
+                        ()
+                ]
             ]
         ]
     ]

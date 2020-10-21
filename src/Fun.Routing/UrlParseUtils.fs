@@ -63,39 +63,34 @@ let private convertToRegexPatternAndFormatChars (formatString : string) =
 
 
 let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreCase : bool) =
-    try
-        let pattern, formatChars =
-            format.Value
-            |> Regex.Escape
-            |> convertToRegexPatternAndFormatChars
+    let pattern, formatChars =
+        format.Value
+        |> Regex.Escape
+        |> convertToRegexPatternAndFormatChars
 
-        let options =
-            match ignoreCase with
-            | true  -> RegexOptions.IgnoreCase
-            | false -> RegexOptions.None
+    let options =
+        match ignoreCase with
+        | true  -> RegexOptions.IgnoreCase
+        | false -> RegexOptions.None
 
-        let result = Regex.Match(input, pattern, options)
+    let result = Regex.Match(input, pattern, options)
 
-        if result.Groups.Count <= 1
-        then None
-        else
-            let groups =
-                result.Groups
-                |> Seq.cast<Group>
-                |> Seq.skip 1
+    if result.Groups.Count <= 1
+    then None
+    else
+        let groups = result.Groups |> Seq.cast<Group> |> Seq.skip 1
 
-            let values =
-                (groups, formatChars)
-                ||> Seq.map2 (fun g c ->
-                    let _, parser   = formatStringMap.[c]
-                    let value       = parser g.Value
-                    value)
-                |> Seq.toArray
+        let values =
+            (groups, formatChars)
+            ||> Seq.map2 (fun g c ->
+                let _, parser = formatStringMap.[c]
+                parser g.Value)
+            |> Seq.toArray
 
-            match values.Length with
-              | 1 -> values.[0]
-              | _ ->
-                  let tupleType =
+        match values.Length with
+            | 1 -> values.[0]
+            | _ ->
+                let tupleType =
                     values
                     |> Array.map (fun v ->
                         #if FABLE_COMPILER
@@ -105,13 +100,5 @@ let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreC
                         #endif
                         )
                     |> FSharpType.MakeTupleType
-                  FSharpValue.MakeTuple(values, tupleType)
-            |> unbox<'T> |> Some
-    with
-    | ex ->
-        #if FABLE_COMPILER
-        Browser.Dom.console.warn (sprintf "Url matched failed: %A" ex)
-        #else
-        System.Diagnostics.Debug.WriteLine(sprintf "Route parse error: %A" ex)
-        #endif
-        None
+                FSharpValue.MakeTuple(values, tupleType)
+        |> unbox<'T> |> Some
