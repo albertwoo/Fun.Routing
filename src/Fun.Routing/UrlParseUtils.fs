@@ -75,7 +75,7 @@ let tryMatchInput (format : PrintfFormat<_,_,_,_, 'T>) (input : string) (ignoreC
 
     let result = Regex.Match(input, pattern, options)
 
-    if result.Groups.Count <= 1
+    if isNull result || result.Groups.Count <= 1
     then None
     else
         let groups = result.Groups |> Seq.cast<Group> |> Seq.skip 1

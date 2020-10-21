@@ -6,10 +6,10 @@
 It supports both client side and server sider rendering.</Description>
     <PackageProjectUrl>https://github.com/albertwoo/Fun.Routing</PackageProjectUrl>
     <RepositoryUrl>https://github.com/albertwoo/Fun.Routing</RepositoryUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>slaveoftime</Authors>
     <Company>https://www.slaveoftime.fun</Company>
-    <PackageReleaseNotes>Raise exception if route not matched</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix route match null issue</PackageReleaseNotes>
     <Copyright>https://www.slaveoftime.fun</Copyright>
     <PackageIconUrl></PackageIconUrl>
     <PackageTags>Fable, SSR, Routing, Navigation, F#</PackageTags>
